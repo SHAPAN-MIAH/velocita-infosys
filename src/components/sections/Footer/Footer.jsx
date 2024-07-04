@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import "./footer.css";
 import Image from "next/image";
 import Logo from "/public/logo.png";
@@ -13,8 +14,26 @@ import youtubeLogo from "../../../../public/footer/youtubeLogo.png";
 import instagramLogo from "../../../../public/footer/instagram.png";
 import twitterLogo from "../../../../public/footer/twitter.png";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const [token, setToken] = useState(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setToken(token);
+  }, [pathname]);
+
+  const LogoutHandler = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+
+    setTimeout(() => {
+      router.push("/login");
+    });
+  };
+
   const year = new Date().getFullYear();
   return (
     <div className="footer">
@@ -22,12 +41,13 @@ const Footer = () => {
         <div>
           <Image src={Logo} />
           <p className="footer_des">
-            Our experienced team of developers, designers, and strategists is
-            eager to explore your project idea, brainstorm solutions, and craft
-            a tailored plan to bring it to life. From web and mobile
-            applications to cutting-edge software solutions, we're committed to
-            delivering excellence every step of the way. Let's embark on this
-            journey together and create something extraordinary!"
+            Since establishment in 2014, Velocita Infosys Limited has been
+            committed to providing outstanding BPO solutions and IT services.
+            With a skilled team and experienced management, we've served clients
+            globally, prioritizing excellence, integrity, and customer
+            satisfaction. Our dedication to innovation ensures we surpass
+            expectations in the ever-evolving realm of BPO and technology
+            solutions.
           </p>
           <button className="contact_btn">Contact US</button>
         </div>
@@ -39,6 +59,25 @@ const Footer = () => {
             <Link href="">Portfolio</Link>
             <Link href="">Blog</Link>
             <Link href="">Career</Link>
+            {token ? (
+              <Link className="link_btn" href={"/adminPanel"}>
+                Admin Panel
+              </Link>
+            ) : (
+              ""
+            )}
+
+            {token ? (
+              <Link href={""} onClick={LogoutHandler}>
+                Logout
+              </Link>
+            ) : (
+              <Link className="link_btn" href="/login">
+                Admin Login
+              </Link>
+            )}
+
+            <Link href="/privacy-policy">Privacy Policy</Link>
           </div>
           <div>
             <h4>Services</h4>
